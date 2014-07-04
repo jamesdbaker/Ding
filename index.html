@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="Kitchen Timer Utility">
+		<meta name="author" content="James Baker">
+
+		<title>Ding!</title>
+
+		<!-- Bootstrap core CSS -->
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+
+		<link href="css/ding.css" rel="stylesheet">
+
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+		<a name="top"></a>
+		<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="extLink navbar-brand" href="index.html">Ding!</a>
+				</div>
+				<div class="collapse navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li><a class="extLink" href="#top"><span class="glyphicon glyphicon-chevron-up"></span></a></li>
+						<li><a class="extLink" href="#feedme">Feed Me!</a></li>
+						<li><a class="extLink" href="#about">Wha?</a></li>
+					</ul>
+				</div><!--/.nav-collapse -->
+			</div>
+		</div>
+
+		<div class="container">
+
+			<div class="introduction">
+				<div class="page-header">
+					<h1>Ding! <small>Kitchen Timer</small></h1>
+				</div>
+				
+				<a name="feedme"></a>
+				<div class="panel panel-default" id="panelSettings">
+					<div class="panel-heading">
+						<h3 class="panel-title">Choose Your Meal</h3>
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-md-4">
+								<div class="dropdown">
+									<button class="btn btn-default dropdown-toggle" type="button" id="dropdownPresetDinner" data-toggle="dropdown">
+										What's for dinner?
+										<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownPresetDinner" id="listPresetDinner">
+									</ul>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="dropdown">
+									<button class="btn btn-default dropdown-toggle" type="button" id="dropdownCustomDinner" data-toggle="dropdown">
+										What's cooking?
+										<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownCustomDinner" id="listCustomDinner">
+									</ul>
+								</div>
+							</div>
+							<div class="col-md-4">Add additional recipes and ingredients by editing the JSON files.</div>
+						</div>
+					</div>
+					
+					<ul class="list-group" id="listIngredients">
+					</ul>
+					
+					<div class="panel-footer text-right">
+						<a href="#" onclick="start()"><span class="glyphicon glyphicon-ok"></span> Let's Get Cooking!</a>
+					</div>
+				</div>
+			</div>
+			
+			<div class="panel panel-default" style="display: none;" id="panelTimer">
+				<div class="panel-heading">
+					<h3 class="panel-title">Feed Me!</h3>
+				</div>
+				<div class="panel-body text-center">
+					<div class="jumbotron">
+						<h1 id="clock">00:00:00</h1>
+						<p><a href="#" onclick="pause()" id="pauseLink"><span class="glyphicon glyphicon-pause"></span></a> <a href="#" onclick="stop()"><span class="glyphicon glyphicon-stop"></span></a></p>
+						<p>Grub's up at <span id="endtime">0000</span></p>
+					</div>
+				</div>
+				
+				<ul class="list-group" id="listSteps"></ul>
+			</div>
+			
+			<a name="about"></a>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Wha?</h3>
+				</div>
+				<div class="panel-body">
+					<p class="lead">Ding! was written by me, James Baker, to help stop me overdoing the pasta or underdoing the veg.</p>
+					<p>It's free to use, but if you wish to thank me I'm currently raising money to take 30 Scouts from across Wiltshire to the 23rd World Scout Jamboree in Japan. We've got over £105,000 to raise, so any donations are very gratefully received. Please <a class="extLink" href="https://mydonate.bt.com/fundraisers/jamesbaker" target="_blank">donate now</a>!</p>
+					<p>The code is available on GitHub, and you are welcome to take the code and adapt it to your own needs. I also welcome Pull Requests that make the tool better for everybody.</p>
+					<p>No pizza was burnt during the making of Ding!.</p>
+					<p><small>Built using <a class="extLink" href="http://bootboxjs.com" target="_blank">Bootbox.js</a>, <a class="extLink" href="http://getbootstrap.com" target="_blank">Bootstrap</a>, <a class="extLink" href="https://github.com/goldfire/howler.js" target="_blank">Howler.js</a> and <a class="extLink" href="http://jquery.com" target="_blank">jQuery</a>. Trumpet sound clip by <a class="extLink" href="http://www.freesound.org/people/bone666138/sounds/198851/" target="_blank">bone666138</a>.</small></p>
+				</div>
+			</div>
+
+		</div>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/bootbox.min.js"></script>
+		<script src="js/howler.min.js"></script>
+		
+		<script>
+			var sound = new Howl({urls: ['trumpet.mp3', 'trumpet.ogg']});
+			var timerWorker = new Worker('js/interval.js');
+			
+			var allIngredients = [];
+			var ingredients = [];
+			var timings = [];
+			var timerCount = 0;
+			var paused = false;
+			
+			$('a').click(function (event){ 
+				if(!$(this).hasClass("extLink"))
+			    	event.preventDefault(); 
+			});
+						
+			$.getJSON("data/ingredients.json", function(data){
+				allIngredients = data;
+				
+				$.each(data, function(key, value){
+					$("#listCustomDinner").append('<li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="addIngredient(\''+value.id+'\')">'+value.name+'</a></li>');
+				});
+			});
+			
+			$.getJSON("data/recipes.json", function(data){
+				$.each(data, function(key, value){
+					$("#listPresetDinner").append('<li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="addIngredients(\''+value.ingredients+'\')">'+value.name+'</a></li>');
+				});
+			});
+			
+			function addIngredient(id){
+				if($.inArray(id, ingredients) == -1){
+					ingredients.push(id);
+					
+					var ingredient = $.grep(allIngredients, function(e) { return e.id == id; });
+					if(ingredient.length > 0){
+						$("#listIngredients").append('<li class="list-group-item" id="ingredientsList-'+id+'"><a href="#" onclick="removeIngredient(\''+id+'\')"><span class="glyphicon glyphicon-remove"></span></a> ' + ingredient[0].name + '</li>');
+					}
+				}
+			}
+			
+			function addIngredients(ids){
+				$.each(ids.split(","), function(key, value){
+					addIngredient(value);
+				});
+			}
+			
+			function removeIngredient(id){
+				var index = $.inArray(id, ingredients);
+				if(index > -1){
+					ingredients.splice(index, 1);
+					
+					$("#ingredientsList-"+id).remove();
+				}
+			}
+			
+			function stepComplete(t){
+				$(t).replaceWith($('<li class="list-group-item disabled">'+t.innerText+'</li>'));
+			}
+			
+			function start(){
+				if(ingredients.length == 0){
+					bootbox.alert("<h2>Don't be daft</h2><p>You need to decide what to cook before you can cook it!</p>");
+					return;
+				}
+				
+				//Calculate timings
+				timings = [];
+				timings[0] = "Enjoy!";
+
+				$.each(ingredients, function(key, value){
+					var timeSum = 0;
+					var i = $.grep(allIngredients, function(e) { return e.id == value; })[0];
+					if(i != null){
+						$.each(i.steps.reverse(), function(stepKey, stepValue){
+							timeSum = timeSum + stepValue.time;
+							if(timings[timeSum] == undefined){
+								timings[timeSum] = stepValue.text;
+							}else{
+								timings[timeSum] += "; " + stepValue.text;
+							}
+							
+							if(timeSum > timerCount)
+								timerCount = timeSum;
+						});
+					}
+				});
+				
+				var id = 0;
+				$.each(timings.reverse(), function(key, value){
+					if(value != undefined)
+						$("#listSteps").append('<li class="list-group-item dingStep" id="stepsList-'+id+'" time="'+(timerCount - key)+'"><span class="badge">'+formatTime(timerCount - key)+'</span>' + value + '</li>');
+					
+					id++;
+				});
+				
+				var now = new Date();
+				var endTime = new Date(now.getTime() + timerCount*1000);
+				$("#endtime").text("" + endTime.getHours() + (endTime.getMinutes()+1));
+				
+				timerWorker.onmessage = function(event){
+				    if(event.data === 'interval.start'){
+				        if(!paused){
+				        	timerCount--;
+				        		
+				        	$("#clock").text(formatTime(timerCount));
+				        		
+				        	$(".dingStep").each(function(){
+				        		if(!$(this).hasClass("disabled") && !$(this).hasClass("list-group-item-info")){
+				        			if(parseInt($(this).attr("time")) > timerCount){
+				        				$(this).children().remove(".badge");
+				        				$(this).replaceWith($('<a href="#" class="list-group-item list-group-item-info" onclick="stepComplete(this)"><span class="glyphicon glyphicon-ok"></span> '+this.innerHTML+'</a>'));
+				        					sound.play();
+				        			}
+				        		}
+				        	});			
+				        }
+				    }
+				};
+				timerWorker.postMessage({start:true, ms:1000});
+								
+				$("#panelSettings").hide(1000);
+				$("#panelTimer").show(1000);
+			}
+			
+			function stop(){
+				timerWorker.postMessage({stop:true});
+				
+				timerCount = 0;
+				$("#clock").text("00:00:00");
+				$("#listSteps").empty();
+				
+				$("#panelSettings").show(1000);
+				$("#panelTimer").hide(1000);
+			}
+			
+			function pause(){
+				paused = !paused;
+				if(paused){
+					$("#pauseLink").html('<span class="glyphicon glyphicon-play"></span>');
+				}else{
+					$("#pauseLink").html('<span class="glyphicon glyphicon-pause"></span>');
+					
+					var now = new Date();
+					var endTime = new Date(now.getTime() + timerCount*1000);
+					$("#endtime").text("" + endTime.getHours() + (endTime.getMinutes()+1));
+				}
+			}
+			
+			function formatTime(seconds){
+				var hours   = Math.floor(seconds / 3600);
+				var minutes = Math.floor((seconds % 3600)/60);
+				var seconds = Math.floor(seconds % 60);
+				
+				if (hours   < 10) {hours = "0"+hours;}
+				if (minutes < 10) {minutes = "0"+minutes;}
+				if (seconds < 10) {seconds = "0"+seconds;}
+			
+				return hours+':'+minutes+':'+seconds;
+			}
+		</script>
+	</body>
+</html>
