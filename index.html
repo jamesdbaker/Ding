@@ -224,7 +224,7 @@
 				
 				var now = new Date();
 				var endTime = new Date(now.getTime() + timerCount*1000);
-				$("#endtime").text("" + endTime.getHours() + (endTime.getMinutes()+1));
+				$("#endtime").text(formatClock(endTime.getHours(), (endTime.getMinutes()+1)));
 				
 				timerWorker.onmessage = function(event){
 				    if(event.data === 'interval.start'){
@@ -271,7 +271,7 @@
 					
 					var now = new Date();
 					var endTime = new Date(now.getTime() + timerCount*1000);
-					$("#endtime").text("" + endTime.getHours() + (endTime.getMinutes()+1));
+					$("#endtime").text(formatClock(endTime.getHours(), (endTime.getMinutes()+1)));
 				}
 			}
 			
@@ -285,6 +285,24 @@
 				if (seconds < 10) {seconds = "0"+seconds;}
 			
 				return hours+':'+minutes+':'+seconds;
+			}
+			
+			function formatClock(hours, minutes){
+				var time = "";
+				
+				if(hours < 10){
+					time = "0" + hours;
+				}else{
+					time = "" + hours;
+				}
+					
+				if(minutes < 10){
+					time += "0" + minutes;
+				}else{
+					time += minutes;
+				}
+				
+				return time;
 			}
 		</script>
 	</body>
