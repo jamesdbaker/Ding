@@ -237,7 +237,7 @@
 				        		
 				        	$(".dingStep").each(function(){
 				        		if(!$(this).hasClass("disabled") && !$(this).hasClass("list-group-item-info")){
-				        			if(parseInt($(this).attr("time")) > timerCount){
+				        			if(parseInt($(this).attr("time")) >= timerCount){
 				        				$(this).children().remove(".badge");
 				        				$(this).replaceWith($('<a href="#" class="list-group-item list-group-item-info" onclick="stepComplete(this)"><span class="glyphicon glyphicon-ok"></span> '+this.innerHTML+'</a>'));
 				        					sound.play();
